@@ -13,6 +13,9 @@ import {
   TableRow,
 } from "@material-ui/core";
 import { useState } from "react";
+import DeleteIcon from '@mui/icons-material/Delete';
+import ModeEditIcon from '@mui/icons-material/ModeEdit';
+
 
 function Registration() {
   const paperStyle = {
@@ -29,14 +32,14 @@ function Registration() {
     lname: "",
     email: "",
     city: "",
-    // updateFlag: false,
   });
 
-  const [value, setValue] = useState([]);
+  const [value, setValue] = useState([]); // this state use for only useEffect performance (Like no reload)
   const [buttonLabel2, setButtonLabel] = useState("Register");
   const [TextLabel, setTextLabel] = useState("Registration");
   const storedLoginId = localStorage.getItem("id");
-  const [empdata, empdatachange] = useState(null);
+  const [userdata, setuserdatachange] = useState(null);
+  const [error, setError] = useState(false);
 
   useEffect(() => {
     var api_url =
@@ -55,13 +58,14 @@ function Registration() {
         return res.json();
       })
       .then((resp) => {
-        empdatachange(resp);
-        // setValue(resp);
+        setuserdatachange(resp);
+        setValue(resp)
+       // This is for ( you dont have to refresh the page) // so i am making changes in on state and pass that to use effect
       })
       .catch((err) => {
         console.log(err.message);
       });
-  }, [value]);
+  }, [value]); // value passing for use effect
 
   //////////////////////////////
 
@@ -75,23 +79,111 @@ function Registration() {
         if (result.status === 200) {
           toast.success("User Deleted Successfully");
         }
-        // setValue(resp);
+        setValue(resp);
       });
     }
   };
   const [selectedItemId, setSelectedItemId] = useState(null);
+
   const handleEdit = (id) => {
-    const selectedItem = empdata.find((item) => item.id === id);
+    const selectedItem = userdata.find((item) => item.id === id);
     if (selectedItem) {
       setFormData(selectedItem);
       setSelectedItemId(id);
+      // console.log("ID:=>" + selectedItemId); // checking id hear that its pasing or not
       setButtonLabel("Update");
-      setTextLabel("Update");
+      setTextLabel("Updation");
     }
   };
   ///////////////////////////////////////////
 
-  c
+  // const handleRegister = async (e) => {
+  //   e.preventDefault();
+  //   const apiUrl = selectedItemId
+  //     ? `https://localhost:7175/api/UpdateRegistration` +selectedItemId
+
+  //     : "https://localhost:7175/api/AddRegistration";
+
+  //   const method = selectedItemId ? "PUT" : "POST";
+
+  //   const response = await fetch(apiUrl, {
+  //     method: method,
+  //     headers: {
+  //       Accept: "application/json",
+  //       "Content-Type": "application/json",
+  //     },
+  //     body: JSON.stringify(formData),
+  //   });
+
+  //   if (response.ok) {
+  //     toast.success(
+  //       selectedItemId
+  //         ? "User Updated Successfully"
+  //         : "User Registered Successfully"
+  //     );
+  //     setFormData({
+  //       userid: localStorage.getItem("id"),
+  //       fname: "",
+  //       lname: "",
+  //       email: "",
+  //       city: "",
+  //     });
+  //     setSelectedItemId(null);
+  //     setButtonLabel("Register");
+  //   } else {
+  //     toast.error("Failed to Register/Update User");
+  //   }
+  // };
+
+  const handleRegister = async (e) => {
+
+    // if (formData.fname.length == 0 || lname.length == 0) {
+    //   toast.error("This Field Required");
+    // } else {
+    //   console.log("hi");
+    // }
+    try {
+      e.preventDefault();
+
+      const apiUrl = selectedItemId
+        ? `https://localhost:7175/api/UpdateRegistration`
+        : "https://localhost:7175/api/AddRegistration";
+
+      const method = selectedItemId ? "PUT" : "POST"; // if the selectedItemId has the value then it run put otherwise show  POST  things
+
+      const response = await fetch(apiUrl, {
+        method: method,
+        headers: {
+          Accept: "application/json",
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify(formData),
+      });
+
+      if (response.ok) {
+        toast.success(
+          selectedItemId
+            ? "User Updated Successfully"
+            : "User Registered Successfully"
+        );
+        // changing state after Registration or Updation
+        setFormData({
+          userid: localStorage.getItem("id"),
+          fname: "",
+          lname: "",
+          email: "",
+          city: "",
+        });
+        setSelectedItemId(null);
+        setButtonLabel("Register");
+      } else {
+        toast.error("Failed to Register/Update User");
+      }
+    } catch {
+      toast.error("Error During Processing");
+    }
+  };
+
   return (
     <>
       <ToastContainer
@@ -115,16 +207,18 @@ function Registration() {
           <Grid align="center"></Grid>
           <br />
           <Grid align="center">
-            <input
+            {/* At First i was hiding the text that get direct value from user */}
+
+            {/* <input
               type="hidden"
               name="id"
               value={localStorage.getItem("id")}
               onChange={(e) =>
                 setFormData({ ...formData, userid: e.target.value })
               }
-            />
-            <br />
-            <br />
+            /> */}
+            {/* <br />
+            <br /> */}
             <TextField
               label="First Name"
               placeholder="First Name"
@@ -134,7 +228,10 @@ function Registration() {
               }
               fullWidth
               required
+              helperText={!formData.fname? "First Name Is Required" : ""}
+              error={!formData.fname}
             />
+            {/* {error? <label> First Name Cant Empty </label> : ""} */}
             <br />
             <br />
             <TextField
@@ -146,6 +243,8 @@ function Registration() {
               }
               fullWidth
               required
+              helperText={!formData.lname? "Last Name Is Required" : ""}
+              error={!formData.lname}
             />
             <br />
             <br />
@@ -159,6 +258,8 @@ function Registration() {
               }
               fullWidth
               required
+              helperText={!formData.email? "Email Is Required" : ""}
+              error={!formData.email}
             />
             <br />
             <br />
@@ -171,6 +272,8 @@ function Registration() {
               }
               fullWidth
               required
+              helperText={!formData.city? "City Is Required" : ""}
+              error={!formData.city}
             />
             <br />
             <br />
@@ -202,8 +305,8 @@ function Registration() {
               </TableRow>
             </TableHead>
             <TableBody>
-              {empdata &&
-                empdata.map((item) => (
+              {userdata &&
+                userdata.map((item) => (
                   <TableRow key={item.id}>
                     <TableCell>{item.fname}</TableCell>
                     <TableCell>{item.lname}</TableCell>
@@ -217,7 +320,7 @@ function Registration() {
                         variant="contained"
                         color="primary"
                       >
-                        Edit
+                       <ModeEditIcon/>
                       </Button>
                       <Button
                         onClick={() => {
@@ -226,7 +329,7 @@ function Registration() {
                         variant="contained"
                         color="secondary"
                       >
-                        Delete
+                      <DeleteIcon/>
                       </Button>
                     </TableCell>
                   </TableRow>

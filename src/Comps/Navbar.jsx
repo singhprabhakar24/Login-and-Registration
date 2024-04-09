@@ -57,13 +57,14 @@ function Navbar() {
       result.json().then((resp) => {
         // console.log(resp); // hear what we write is related to api returns
 
+
         if (result.status === 200) {
           toast.success("User Successfully Logged Out");
-          
+           navigate("/");
           // navigate("/");
-          setTimeout(() => {
-            navigate("/");
-          }, 500);
+          // setTimeout(() => {
+          //   navigate("/");
+          // }, 500);
           localStorage.clear();
         } else {
           console.log(resp);
