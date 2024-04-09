@@ -1,0 +1,126 @@
+ 
+ LINE 1 TO 126 ==== COde of Registration.
+ 
+ useEffect(() => {
+  //     fetchRegistrations();
+
+  //     const userIdFromStorage = localStorage.getItem('id');
+  //     if (userIdFromStorage) {
+  //       setNewRegistration((prev) => ({ ...prev, id: userIdFromStorage }));
+  //     }
+  //   }, []);
+
+  //   const fetchRegistrations = async () => {
+  //     try {
+  //       const response = await axios.get('https://localhost:7175/api/AddRegistration');
+  //       setRegistrations(response.data);
+  //     } catch (error) {
+  //       console.error('Error fetching registrations:', error);
+  //     }
+  //   };
+
+  //   const handleChange = (e) => {
+  //     const { name, value } = e.target;
+  //     setNewRegistration({ ...newRegistration, [name]: value });
+  //   };
+
+  //   const handleSubmit = async (e) => {
+  //     e.preventDefault();
+  //     try {
+  // await axios.post('https://localhost:7175/api/AddRegistration', newRegistration);
+  //       alert('Registration added successfully!');
+  //       fetchRegistrations(); // Fetch updated registrations list
+  //       setNewRegistration({
+  //         userId: '', // Reset user ID to empty
+  //         fname: '',
+  //         lname:'',
+  //         email: '',
+  //         city: '',
+  //       });
+  //     } catch (error) {
+  //       console.error('Error adding registration:', error);
+  //     }
+
+  //     return (
+  //       <div>
+  //         <h2>Registration Form</h2>
+  //         <form onSubmit={handleSubmit}>
+  //           {/* User ID field is hidden and auto-filled from local storage */}
+  //           <input type="hidden" name="userId" value={newRegistration.id} />
+
+  //           <label>
+  //             FName:
+  //   newRegistration.fname} onChange={handleChange} />
+  //           </label>
+  //           <label>
+  //             LName:
+  //   newRegistration.lname} onChange={handleChange} />
+  //           </label>
+  //           <label>
+  //             Email:
+  //   newRegistration.email} onChange={handleChange} />
+  //           </label>
+
+  //           <label>
+  //             City:
+  //             <input type="text" name="address" value={newRegistration.city} onChange={handleChange} />
+  //           </label>
+  //           <button type="submit">Submit</button>
+  //         </form>
+
+  //         <h2>Registrations List</h2>
+  //         <ul>
+  //           {registrations.map((registration) => (
+  //   registration.id}>
+  //   fname: {registration.fname},  Email: {registration.email}
+  //             </li>
+  //           ))}
+  //         </ul>
+  //       </div>
+  //     );
+  //   };
+
+  ////////////////////////////////////////////////////////////////////////////
+
+  /*
+const[Userid,setUserId] = useState('')
+const [Fname,setFname] = useState('')
+const [Lname,setLname] = useState('')
+const [Email,setEmail] = useState('')
+const [City,setCity] = useState('')
+
+const handleRegister =() =>{
+  
+
+   
+
+    var api_url = "https://localhost:7175/api/AddRegistration" 
+    fetch(api_url, {
+     // mode:  'cors' ,
+      method: "POST",
+
+      headers: {
+        Accept: "application/json",
+        "Content-type": "application/json",
+      },
+   
+    }).then((result) => {
+      
+      result.json().then((resp) => {
+        console.log(resp);
+        
+        if (result.status === 200) {
+ 
+          // const uid =resp.uid;
+          // localStorage.setItem("uid",uid);
+          // console.log('uid:=>',uid)
+
+          alert("User Login Successfully")
+        } else {
+          console.log("User is not valid!");
+        }
+      });
+    });
+  
+}
+*/
