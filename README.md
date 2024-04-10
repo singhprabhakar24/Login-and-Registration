@@ -4,3 +4,5 @@ Other Than This is Login And Registration Crud Operation in React Using Asp.Net 
 
 It has all front end code and all fetched code according to API.
 
+Skip or Ignore  -- Deails.jsx File
+
