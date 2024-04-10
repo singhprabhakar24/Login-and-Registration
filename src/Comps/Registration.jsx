@@ -34,12 +34,17 @@ function Registration() {
     city: "",
   });
 
-  const [value, setValue] = useState([]); // this state use for only useEffect performance (Like no reload)
+  const [value, setValue] = useState(null); // this state use for only useEffect performance (Like no reload)
+  const [value2,setValue2] =useState(false)
   const [buttonLabel2, setButtonLabel] = useState("Register");
   const [TextLabel, setTextLabel] = useState("Registration");
   const storedLoginId = localStorage.getItem("id");
   const [userdata, setuserdatachange] = useState(null);
   const [error, setError] = useState(false);
+
+
+
+
 
   useEffect(() => {
     var api_url =
@@ -59,30 +64,39 @@ function Registration() {
       })
       .then((resp) => {
         setuserdatachange(resp);
-        setValue(resp)
+     setValue(resp) // without it useEffect Have some issue with toastify.
        // This is for ( you dont have to refresh the page) // so i am making changes in on state and pass that to use effect
       })
       .catch((err) => {
         console.log(err.message);
       });
-  }, [value]); // value passing for use effect
+  }, [value,value2,formData]); // value passing for use effect
 
   //////////////////////////////
 
+
   const handleDelete = (id) => {
-    if (
-      window.confirm("Are Your Sure You Wanted To Delete This Data?") == true
-    ) {
-      fetch("https://localhost:7175/api/DeleteRegistration?" + "id=" + id, {
+    if (window.confirm("Are Your Sure You Wanted To Delete This Data?")) {
+      fetch("https://localhost:7175/api/DeleteRegistration?id=" + id, {
         method: "DELETE",
       }).then((result) => {
         if (result.status === 200) {
-          toast.success("User Deleted Successfully");
+          setValue(result);
         }
-        setValue(resp);
       });
     }
   };
+
+  useEffect(() => {
+    if (value && value.status === 200) {
+      toast.success("User Deleted Successfully");
+    }
+  }, [value]);
+
+
+
+
+
   const [selectedItemId, setSelectedItemId] = useState(null);
 
   const handleEdit = (id) => {
@@ -97,51 +111,9 @@ function Registration() {
   };
   ///////////////////////////////////////////
 
-  // const handleRegister = async (e) => {
-  //   e.preventDefault();
-  //   const apiUrl = selectedItemId
-  //     ? `https://localhost:7175/api/UpdateRegistration` +selectedItemId
-
-  //     : "https://localhost:7175/api/AddRegistration";
-
-  //   const method = selectedItemId ? "PUT" : "POST";
-
-  //   const response = await fetch(apiUrl, {
-  //     method: method,
-  //     headers: {
-  //       Accept: "application/json",
-  //       "Content-Type": "application/json",
-  //     },
-  //     body: JSON.stringify(formData),
-  //   });
-
-  //   if (response.ok) {
-  //     toast.success(
-  //       selectedItemId
-  //         ? "User Updated Successfully"
-  //         : "User Registered Successfully"
-  //     );
-  //     setFormData({
-  //       userid: localStorage.getItem("id"),
-  //       fname: "",
-  //       lname: "",
-  //       email: "",
-  //       city: "",
-  //     });
-  //     setSelectedItemId(null);
-  //     setButtonLabel("Register");
-  //   } else {
-  //     toast.error("Failed to Register/Update User");
-  //   }
-  // };
+  
 
   const handleRegister = async (e) => {
-
-    // if (formData.fname.length == 0 || lname.length == 0) {
-    //   toast.error("This Field Required");
-    // } else {
-    //   console.log("hi");
-    // }
     try {
       e.preventDefault();
 
@@ -166,6 +138,8 @@ function Registration() {
             ? "User Updated Successfully"
             : "User Registered Successfully"
         );
+       
+// setValue2(true)
         // changing state after Registration or Updation
         setFormData({
           userid: localStorage.getItem("id"),
@@ -343,3 +317,5 @@ function Registration() {
 }
 
 export default Registration;
+
+
