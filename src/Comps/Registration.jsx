@@ -2,7 +2,7 @@ import React, { useEffect } from "react";
 import { Grid, Paper, TextField, Button, Box } from "@mui/material";
 import Login from "./Login";
 import Navbar from "./Navbar";
-import { ToastContainer, toast } from "react-toastify";
+// import { ToastContainer, toast } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
 import {
   Table,
@@ -13,9 +13,12 @@ import {
   TableRow,
 } from "@material-ui/core";
 import { useState } from "react";
-import DeleteIcon from '@mui/icons-material/Delete';
-import ModeEditIcon from '@mui/icons-material/ModeEdit';
+import DeleteIcon from "@mui/icons-material/Delete";
+import ModeEditIcon from "@mui/icons-material/ModeEdit";
+import { useCallback } from "react";
+import { ReactDOM } from "react";
 
+import toast, { Toaster } from "react-hot-toast";
 
 function Registration() {
   const paperStyle = {
@@ -35,16 +38,12 @@ function Registration() {
   });
 
   const [value, setValue] = useState(null); // this state use for only useEffect performance (Like no reload)
-  const [value2,setValue2] =useState(false)
+  const [value2, setValue2] = useState(false);
   const [buttonLabel2, setButtonLabel] = useState("Register");
   const [TextLabel, setTextLabel] = useState("Registration");
   const storedLoginId = localStorage.getItem("id");
   const [userdata, setuserdatachange] = useState(null);
   const [error, setError] = useState(false);
-
-
-
-
 
   useEffect(() => {
     var api_url =
@@ -64,16 +63,15 @@ function Registration() {
       })
       .then((resp) => {
         setuserdatachange(resp);
-     setValue(resp) // without it useEffect Have some issue with toastify.
-       // This is for ( you dont have to refresh the page) // so i am making changes in on state and pass that to use effect
+        //setValue(resp) // without it useEffect Have some issue with toastify.
+        // This is for ( you dont have to refresh the page) // so i am making changes in on state and pass that to use effect
       })
       .catch((err) => {
         console.log(err.message);
       });
-  }, [value,value2,formData]); // value passing for use effect
+  }, [value, formData]); // value passing for use effect
 
   //////////////////////////////
-
 
   const handleDelete = (id) => {
     if (window.confirm("Are Your Sure You Wanted To Delete This Data?")) {
@@ -93,10 +91,6 @@ function Registration() {
     }
   }, [value]);
 
-
-
-
-
   const [selectedItemId, setSelectedItemId] = useState(null);
 
   const handleEdit = (id) => {
@@ -111,67 +105,52 @@ function Registration() {
   };
   ///////////////////////////////////////////
 
-  
-
   const handleRegister = async (e) => {
-    try {
-      e.preventDefault();
+    e.preventDefault();
 
-      const apiUrl = selectedItemId
-        ? `https://localhost:7175/api/UpdateRegistration`
-        : "https://localhost:7175/api/AddRegistration";
+    const apiUrl = selectedItemId
+      ? `https://localhost:7175/api/UpdateRegistration`
+      : "https://localhost:7175/api/AddRegistration";
 
-      const method = selectedItemId ? "PUT" : "POST"; // if the selectedItemId has the value then it run put otherwise show  POST  things
+    const method = selectedItemId ? "PUT" : "POST"; // if the selectedItemId has the value then it run put otherwise show  POST  things
 
-      const response = await fetch(apiUrl, {
-        method: method,
-        headers: {
-          Accept: "application/json",
-          "Content-Type": "application/json",
-        },
-        body: JSON.stringify(formData),
+    const response = await fetch(apiUrl, {
+      method: method,
+      headers: {
+        Accept: "application/json",
+        "Content-Type": "application/json",
+      },
+      body: JSON.stringify(formData),
+    });
+
+    if (response.ok) {
+      toast.success(
+        selectedItemId
+          ? "User Updated Successfully"
+          : "User Registered Successfully", {
+            icon: '👏',
+          }
+      );
+
+      // setValue2(true)
+      // changing state after Registration or Updation
+      setFormData({
+        userid: localStorage.getItem("id"),
+        fname: "",
+        lname: "",
+        email: "",
+        city: "",
       });
-
-      if (response.ok) {
-        toast.success(
-          selectedItemId
-            ? "User Updated Successfully"
-            : "User Registered Successfully"
-        );
-       
-// setValue2(true)
-        // changing state after Registration or Updation
-        setFormData({
-          userid: localStorage.getItem("id"),
-          fname: "",
-          lname: "",
-          email: "",
-          city: "",
-        });
-        setSelectedItemId(null);
-        setButtonLabel("Register");
-      } else {
-        toast.error("Failed to Register/Update User");
-      }
-    } catch {
-      toast.error("Error During Processing");
+      setSelectedItemId(null);
+      setButtonLabel("Register");
+    } else {
+      toast.error("Failed to Register/Update User");
     }
   };
 
   return (
     <>
-      <ToastContainer
-        position="top-center"
-        autoClose={500}
-        hideProgressBar={false}
-        newestOnTop={false}
-        closeOnClick
-        rtl={false}
-        pauseOnFocusLoss
-        draggable
-        pauseOnHover
-        theme="light"
-      />
+      <Toaster position="top-center" reverseOrder={false} />
       <Navbar />
       <Grid>
         <Paper variant="elevation" elevation={10} style={paperStyle}>
@@ -202,7 +181,7 @@ function Registration() {
               }
               fullWidth
               required
-              helperText={!formData.fname? "First Name Is Required" : ""}
+              helperText={!formData.fname ? "First Name Is Required" : ""}
               error={!formData.fname}
             />
             {/* {error? <label> First Name Cant Empty </label> : ""} */}
@@ -217,7 +196,7 @@ function Registration() {
               }
               fullWidth
               required
-              helperText={!formData.lname? "Last Name Is Required" : ""}
+              helperText={!formData.lname ? "Last Name Is Required" : ""}
               error={!formData.lname}
             />
             <br />
@@ -232,7 +211,7 @@ function Registration() {
               }
               fullWidth
               required
-              helperText={!formData.email? "Email Is Required" : ""}
+              helperText={!formData.email ? "Email Is Required" : ""}
               error={!formData.email}
             />
             <br />
@@ -246,7 +225,7 @@ function Registration() {
               }
               fullWidth
               required
-              helperText={!formData.city? "City Is Required" : ""}
+              helperText={!formData.city ? "City Is Required" : ""}
               error={!formData.city}
             />
             <br />
@@ -260,7 +239,7 @@ function Registration() {
             >
               {buttonLabel2}
             </Button>
-            <ToastContainer />
+            <Toaster />
           </Grid>
         </Paper>
       </Grid>
@@ -294,7 +273,7 @@ function Registration() {
                         variant="contained"
                         color="primary"
                       >
-                       <ModeEditIcon/>
+                        <ModeEditIcon />
                       </Button>
                       <Button
                         onClick={() => {
@@ -303,7 +282,7 @@ function Registration() {
                         variant="contained"
                         color="secondary"
                       >
-                      <DeleteIcon/>
+                        <DeleteIcon />
                       </Button>
                     </TableCell>
                   </TableRow>
@@ -317,5 +296,3 @@ function Registration() {
 }
 
 export default Registration;
-
-

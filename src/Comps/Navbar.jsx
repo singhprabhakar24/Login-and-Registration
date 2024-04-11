@@ -10,8 +10,10 @@ import {
 import { Link as RouterLink } from "react-router-dom";
 import Button from "@mui/material/Button";
 import { useNavigate } from "react-router-dom";
-import { ToastContainer, toast } from "react-toastify";
-import "react-toastify/dist/ReactToastify.css";
+// import { ToastContainer, toast } from "react-toastify";
+// import "react-toastify/dist/ReactToastify.css";
+ import toast, { Toaster } from "react-hot-toast";
+
 
 const useStyles = makeStyles((theme) => ({
   navlinks: {
@@ -60,8 +62,8 @@ function Navbar() {
 
         if (result.status === 200) {
           toast.success("User Successfully Logged Out");
-           navigate("/");
-          // navigate("/");
+          //  navigate("/");
+          navigate("/");
           // setTimeout(() => {
           //   navigate("/");
           // }, 500);
@@ -75,7 +77,7 @@ function Navbar() {
 
   return (
     <>
-      <ToastContainer
+      {/* <ToastContainer
         position="top-center"
         autoClose={5000}
         hideProgressBar={false}
@@ -86,7 +88,8 @@ function Navbar() {
         draggable
         pauseOnHover
         theme="light"
-      />
+      /> */}
+       <Toaster position="top-center" reverseOrder={false} />
       <AppBar>
         <Toolbar>
           <Typography variant="h4" className={classes.logo}>
@@ -122,7 +125,7 @@ function Navbar() {
               </>
             )}
           </div>
-          <ToastContainer />
+          
         </Toolbar>
       </AppBar>
     </>
