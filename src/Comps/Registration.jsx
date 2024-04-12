@@ -18,6 +18,8 @@ import ModeEditIcon from "@mui/icons-material/ModeEdit";
 import { useCallback } from "react";
 import { ReactDOM } from "react";
 
+
+
 import toast, { Toaster } from "react-hot-toast";
 
 function Registration() {
@@ -44,6 +46,11 @@ function Registration() {
   const storedLoginId = localStorage.getItem("id");
   const [userdata, setuserdatachange] = useState(null);
   const [error, setError] = useState(false);
+  const [selectedItemId, setSelectedItemId] = useState(null);
+
+  const [fetchData, setFetchData] = useState(false); 
+
+
 
   useEffect(() => {
     var api_url =
@@ -67,9 +74,9 @@ function Registration() {
         // This is for ( you dont have to refresh the page) // so i am making changes in on state and pass that to use effect
       })
       .catch((err) => {
-        console.log(err.message);
+        console.log(err.message);             
       });
-  }, [value, formData]); // value passing for use effect
+  }, [value, fetchData,selectedItemId]); // value passing for use effect
 
   //////////////////////////////
 
@@ -91,7 +98,7 @@ function Registration() {
     }
   }, [value]);
 
-  const [selectedItemId, setSelectedItemId] = useState(null);
+ 
 
   const handleEdit = (id) => {
     const selectedItem = userdata.find((item) => item.id === id);
@@ -107,7 +114,10 @@ function Registration() {
 
   const handleRegister = async (e) => {
     e.preventDefault();
-
+    if (!formData.fname.trim() || !formData.lname.trim() || !formData.email.trim() || !formData.city.trim()) {
+      toast.error('All fields are required');
+      return;
+    }
     const apiUrl = selectedItemId
       ? `https://localhost:7175/api/UpdateRegistration`
       : "https://localhost:7175/api/AddRegistration";
@@ -131,7 +141,7 @@ function Registration() {
             icon: '👏',
           }
       );
-
+setFetchData(true)
       // setValue2(true)
       // changing state after Registration or Updation
       setFormData({
@@ -181,10 +191,10 @@ function Registration() {
               }
               fullWidth
               required
-              helperText={!formData.fname ? "First Name Is Required" : ""}
-              error={!formData.fname}
+              // helperText={!formData.fname ? "First Name Is Required" : ""}
+              // error={!formData.fname}
             />
-            {/* {error? <label> First Name Cant Empty </label> : ""} */}
+           
             <br />
             <br />
             <TextField
@@ -196,8 +206,8 @@ function Registration() {
               }
               fullWidth
               required
-              helperText={!formData.lname ? "Last Name Is Required" : ""}
-              error={!formData.lname}
+              // helperText={!formData.lname ? "Last Name Is Required" : ""}
+              // error={!formData.lname}
             />
             <br />
             <br />
@@ -211,8 +221,8 @@ function Registration() {
               }
               fullWidth
               required
-              helperText={!formData.email ? "Email Is Required" : ""}
-              error={!formData.email}
+              // helperText={!formData.email ? "Email Is Required" : ""}
+              // error={!formData.email}
             />
             <br />
             <br />
@@ -225,8 +235,8 @@ function Registration() {
               }
               fullWidth
               required
-              helperText={!formData.city ? "City Is Required" : ""}
-              error={!formData.city}
+              // helperText={!formData.city ? "City Is Required" : ""}
+              // error={!formData.city}
             />
             <br />
             <br />
@@ -238,6 +248,7 @@ function Registration() {
               onClick={handleRegister}
             >
               {buttonLabel2}
+            {/* {selectedItemId ? 'Update' : 'Register'} */}
             </Button>
             <Toaster />
           </Grid>

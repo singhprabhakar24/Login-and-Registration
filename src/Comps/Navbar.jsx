@@ -62,11 +62,11 @@ function Navbar() {
 
         if (result.status === 200) {
           toast.success("User Successfully Logged Out");
-          //  navigate("/");
-          navigate("/");
-          // setTimeout(() => {
-          //   navigate("/");
-          // }, 500);
+         
+          // navigate("/");
+          setTimeout(() => {
+            navigate("/");
+          }, 500);
           localStorage.clear();
         } else {
           console.log(resp);
@@ -77,18 +77,8 @@ function Navbar() {
 
   return (
     <>
-      {/* <ToastContainer
-        position="top-center"
-        autoClose={5000}
-        hideProgressBar={false}
-        newestOnTop={false}
-        closeOnClick
-        rtl={false}
-        pauseOnFocusLoss
-        draggable
-        pauseOnHover
-        theme="light"
-      /> */}
+    {/* <h1>Gantner</h1> */}
+  
        <Toaster position="top-center" reverseOrder={false} />
       <AppBar>
         <Toolbar>
